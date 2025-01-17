@@ -4,6 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './Pages/Login';
 import SignUp from './Pages/Signup';
+import Home from './Pages/Home';
+import Layout from './Components/Layout';
 
 
 const Stack = createNativeStackNavigator();
@@ -12,8 +14,9 @@ function App(): React.JSX.Element {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <NavigationContainer>
+        <Layout>
         <Stack.Navigator
-          initialRouteName="Login"
+          initialRouteName="Home"
           screenOptions={{
             headerShown: false, // Hide headers if not needed
           }}
@@ -21,10 +24,10 @@ function App(): React.JSX.Element {
 
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="SignUp" component={SignUp} />
-          {/* Add other screens here when needed */}
-
+          <Stack.Screen name="Home" component={Home} />
 
         </Stack.Navigator>
+        </Layout>
       </NavigationContainer>
     </SafeAreaView>
 

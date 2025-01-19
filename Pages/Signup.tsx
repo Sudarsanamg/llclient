@@ -10,28 +10,54 @@ import {
   Alert,
   TouchableOpacity
 } from 'react-native';
+import axios from 'axios';
+import Config from 'react-native-config';
+
+import { verifyUser ,sendOtp} from '../api/url-helper';
 import { useNavigation } from '@react-navigation/native';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    if (email === 'test@example.com' && password === 'password123') {
-      Alert.alert('Login Successful', 'Welcome back!');
-    } else {
-      Alert.alert('Login Failed', 'Invalid credentials');
+
+  const verifyEmail =async()=>{
+    // const response = await verifyUser(email);
+    // if(response.status === 201){
+      return true;
+    // }
+    // return false;
+  }
+
+ const handleCreateAccount = async()=>{
+  //we need to verify user
+  //check if user already exists
+  const user = await verifyEmail();
+  if(user === false){
+    Alert.prompt('user already exists');
+  }
+
+  else{
+    // setLoading(true);
+    // setResend(true);
+    try {
+        // await sendOtp(email);
+        navigation.navigate('Otpverification');
+    } catch (err) {
+        console.error('Something went wrong', err);
+    } finally {
+        // setLoading(false); 
     }
-  };
+  }
+ }
 
   const handleGoogleLogin = () => {
     Alert.alert('Google Login', 'Continue with Google clicked');
   };
 
-  const handleForgotPassword = () => {
-    Alert.alert('Forgot Password', 'Reset password instructions sent to your email');
-  };
+  // const handleForgotPassword = () => {
+  //   Alert.alert('Forgot Password', 'Reset password instructions sent to your email');
+  // };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -49,27 +75,7 @@ const SignUp = () => {
           autoCapitalize="none"
         />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#888"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={true}
-          autoCapitalize="none"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Repeat Password"
-          placeholderTextColor="#888"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={true}
-          autoCapitalize="none"
-        />
-
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <TouchableOpacity style={styles.button} onPress={handleCreateAccount}>
           <Text style={styles.buttonText}>Create new Account</Text>
         </TouchableOpacity>
 
@@ -87,13 +93,6 @@ const SignUp = () => {
           />
           <Text style={styles.googleButtonText}>Continue with Google</Text>
         </TouchableOpacity>
-
-        
-
-
-
-
-
       </View>
     </SafeAreaView>
   );

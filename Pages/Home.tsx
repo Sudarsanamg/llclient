@@ -27,7 +27,7 @@ const Home = () => {
       </View>
 
       {/* Content Buttons */}
-      <View>
+      <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Connect</Text>
         </TouchableOpacity>
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   button: {
-    width: '100%',
+    width: '70%',
     height: 50,
     backgroundColor: '#4CAF50',
     justifyContent: 'center',
@@ -78,6 +78,11 @@ const styles = StyleSheet.create({
   streak:{
     display:'flex',
     flexDirection:'row',
+  },
+  buttonContainer:{
+    marginTop:20,
+    display:'flex',
+    alignItems:'center',
   }
 });
 

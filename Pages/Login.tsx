@@ -18,8 +18,8 @@ const Login = () => {
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    if (email === 'test@example.com' && password === 'password123') {
-      Alert.alert('Login Successful', 'Welcome back!');
+    if (email === 'test@email.com' && password === 'Test@123') {
+      navigation.navigate('Home');
     } else {
       Alert.alert('Login Failed', 'Invalid credentials');
     }
@@ -45,8 +45,8 @@ const Login = () => {
           placeholderTextColor="#888"
           value={email}
           onChangeText={setEmail}
-          keyboardType="email-address"
           autoCapitalize="none"
+          selectionColor="green"
         />
 
         <TextInput

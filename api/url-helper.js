@@ -6,7 +6,7 @@ export const verifyUser = async(email)=> await axios.get(`${Config.server_domain
 
 
 //post
-export const sendOtp =async(email) => await axios.post(`${Config.server_domain}/users/send-otp`,email);
+export const sendOtp =async(email) => await axios.post(`${Config.server_domain}/users/send-otp`,{email});
 
 
 //put

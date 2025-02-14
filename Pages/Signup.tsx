@@ -13,7 +13,7 @@ import {
 import axios from 'axios';
 import Config from 'react-native-config';
 
-import { verifyUser ,sendOtp} from '../api/url-helper';
+import { sendOtp} from '../api/url-helper';
 import { useNavigation } from '@react-navigation/native';
 
 const SignUp = () => {
@@ -21,19 +21,18 @@ const SignUp = () => {
   const navigation = useNavigation();
 
 
-  const verifyEmail =async()=>{
-    // const response = await verifyUser(email);
-    // if(response.status === 201){
-      return true;
-    // }
-    // return false;
-  }
+  const verifyEmail = async()=>{
+    const response = await axios.get(`${Config.server_domain}/users/verify-user?email=${email}`);
+    console.log('*******^&^&*^&&',response)
+   if(response.status === 204){
+      return false;
+    }
+    return true;
+  };
 
  const handleCreateAccount = async()=>{
-  //we need to verify user
-  //check if user already exists
   const user = await verifyEmail();
-  if(user === false){
+  if(!user){
     Alert.prompt('user already exists');
   }
 
@@ -41,8 +40,15 @@ const SignUp = () => {
     // setLoading(true);
     // setResend(true);
     try {
-        // await sendOtp(email);
-        navigation.navigate('Otpverification');
+        await sendOtp(email).then((response) => {
+            console.log(response);
+            if (response.status === 201) {
+                console.log('OTP sent successfully');
+            }
+        }).catch((error) => {
+            console.log('Error while sending OTP', error);
+        });
+        navigation.navigate('Otpverification', {email: email});
     } catch (err) {
         console.error('Something went wrong', err);
     } finally {

@@ -11,18 +11,41 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import Config from 'react-native-config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    if (email === 'test@email.com' && password === 'Test@123') {
-      navigation.navigate('Home');
-    } else {
+  const handleLogin =async () => {
+    // if (email === 'test@email.com' && password === 'Test@123') {
+    //   navigation.navigate('Home');
+    // } else {
+    //   Alert.alert('Login Failed', 'Invalid credentials');
+    // }
+
+    try {
+      const isValidUser = await axios.post(`${Config.server_domain}/users/login`,{
+        email: email,
+        password: password,
+      });
+      if(isValidUser.status === 200){
+        navigation.navigate('Home');
+        //set the token
+        console.log(isValidUser.data.token);
+        await AsyncStorage.setItem('authToken', isValidUser.data.token);
+      }else{
+        Alert.alert('Login Failed', 'Invalid credentials');
+      }
+    } catch (error) {
       Alert.alert('Login Failed', 'Invalid credentials');
     }
+
+    
   };
 
   const handleGoogleLogin = () => {
@@ -30,7 +53,8 @@ const Login = () => {
   };
 
   const handleForgotPassword = () => {
-    Alert.alert('Forgot Password', 'Reset password instructions sent to your email');
+    navigation.navigate('ForgotPassword');
+    // Alert.alert('Forgot Password', 'Reset password instructions sent to your email');
   };
 
   return (

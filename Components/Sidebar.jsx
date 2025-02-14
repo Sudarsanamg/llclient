@@ -48,7 +48,12 @@ const Sidebar = ({onClose}) => {
           <Text style={styles.menuText}>Settings</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={()=>navigation.navigate('EditProfile')}>
+          <Icon name="settings-outline" size={25} color="white" />
+          <Text style={styles.menuText}>Edit Profile</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem} onPress={()=>navigation.navigate('Login')}>
           <Icon name="log-out-outline" size={25} color="white" />
           <Text style={styles.menuText}>Logout</Text>
         </TouchableOpacity>

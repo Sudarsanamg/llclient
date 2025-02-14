@@ -3,16 +3,19 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
+import Config from 'react-native-config';
+import axios from 'axios';
 
 
-const OTPVerification = () => {
+const OTPVerification = ({ route }:any) => {
   const [otp, setOtp] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
     const navigation = useNavigation();
 
-
+    const email = route?.params?.email ;
+    const type = route?.params?.type;
   const handleVerifyOTP = async () => {
-    if (otp.length !== 6) {
+    if (otp.length !== 4) {
       Toast.show({
         type: 'error',
         text1: 'Invalid OTP',
@@ -24,16 +27,21 @@ const OTPVerification = () => {
     setIsSubmitting(true);
 
     try {
-      // Mock backend verification logic
-      const isValidOTP = otp === '123456'; // Replace with actual API call
-      if (isValidOTP) {
+      console.log('verify-otp htiited')
+      const isValidOTP = await axios.post(`${Config.server_domain}/users/verify-otp`,{
+        email: email,
+        enteredOtp: otp,
+      });
+      console.log('is valid otp ',isValidOTP);
+      if (isValidOTP.status === 200) {
         Toast.show({
           type: 'success',
           text1: 'Success!',
           text2: 'OTP Verified Successfully!',
         });
         // Navigate to the next page
-        navigation.navigate('Home');
+        
+        navigation.navigate('CompleteProfile', {email: email});
       } else {
         Toast.show({
           type: 'error',

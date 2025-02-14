@@ -2,29 +2,60 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Sidebar from '../Components/Sidebar'; // Import Sidebar component
 import Icon from 'react-native-vector-icons/Ionicons';
+import DailyGoalTracker from '../Components/DailyGoalTracker ';
+// import WeeklyProgressChart from '../Components/WeeklyProgressChart ';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import Config from 'react-native-config';
+import { useSelector ,useDispatch} from "react-redux";
+import { setUser } from '../redux/userSlice';
+
+
+
 
 const Home = () => {
   const name = 'Sudarsanam G';
   const [sidebarVisible, setSidebarVisible] = useState(false);
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const user = useSelector((state:any) => state.user);
+
+
+
+  useState(async() => {
+    const token = await AsyncStorage.getItem('authToken');
+    if(!token){
+      navigation.navigate('Login');
+    }
+    const user = await axios.get(`${Config.server_domain}/users/me?token=${token}`);
+    dispatch(setUser(user.data.user));    
+  }, []);
 
   return (
     <View style={styles.background}>
       {/* Sidebar */}
       {sidebarVisible && <Sidebar onClose={() => setSidebarVisible(false)} />}
         
-       <View style={styles.header}> 
+       <View style={styles.header}>
       {/* Hamburger Menu */}
       <TouchableOpacity style={styles.menuButton} onPress={() => setSidebarVisible(true)}>
         <Icon name="menu" size={30} color="#4F8EF7" />
       </TouchableOpacity>
 
       {/* Page Content */}
-        <Text style={styles.text}>Hi {name}</Text>
+        <Text style={styles.text}>Hi {user.firstName}</Text>
         <View style={styles.streak}>
         <Icon name="flame" size={30} color="#4F8EF7" />
           <Text style={styles.ageText}>28</Text>
         </View>
       </View>
+
+
+      <View>
+      <DailyGoalTracker />
+      </View>
+
 
       {/* Content Buttons */}
       <View style={styles.buttonContainer}>
@@ -35,6 +66,12 @@ const Home = () => {
           <Text style={styles.buttonText}>Group Call</Text>
         </TouchableOpacity>
       </View>
+
+      {/* <WeeklyProgressChart /> */}
+     
+
+
+
     </View>
   );
 };
